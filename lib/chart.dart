@@ -74,7 +74,7 @@ class Chart {
     eventBus.fire(ChartUpdated(chartConfig["chart"]!["name"]));
   }
 
-  _filter(String filter) async {
+  _filterAction(String filter) async {
     switch (chartConfig["filters"]![filter]["type"]) {
       case FilterType.datePicker:
         var date = await showDatePicker(
@@ -104,6 +104,21 @@ class Chart {
     }
   }
 
+  Widget _filterWidget(String filter) {
+    final Widget? child;
+    switch (chartConfig["filters"]![filter]["type"]) {
+      case FilterType.datePicker:
+        child = ElevatedButton(
+            onPressed: (state == ChartState.finished) ? () {_filterAction(filter);} : null,
+            child: Text(chartConfig["filters"]![filter]["name"])
+        );
+        break;
+      default:
+        child = null;
+    }
+    return SizedBox(width: 75, height: 25, child: child);
+  }
+
   Widget _getHeader() {
     final title = Text(
         chartConfig["chart"]!["name"],
@@ -114,20 +129,10 @@ class Chart {
     Widget right = const SizedBox(width: 100);
     if (chartConfig.containsKey("filters")) {
       if (chartConfig["filters"]!.containsKey("right")) {
-        right = SizedBox(width: 75, height: 25,
-            child: ElevatedButton(
-              onPressed: (state == ChartState.finished) ? () {_filter("right");} : null,
-              child: Text(chartConfig["filters"]!["right"]["name"])
-            )
-        );
+        right = _filterWidget("right");
       }
       if (chartConfig["filters"]!.containsKey("left")) {
-        left = SizedBox(width: 75, height: 25,
-            child: ElevatedButton(
-              onPressed: (state == ChartState.finished) ? () {_filter("left");} : null,
-              child: Text(chartConfig["filters"]!["left"]["name"])
-            )
-        );
+        left = _filterWidget("left");
       }
     }
 
