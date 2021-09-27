@@ -76,7 +76,7 @@ class Chart {
 
   _filter(String filter) async {
     switch (chartConfig["filters"]![filter]["type"]) {
-      case DataType.date:
+      case FilterType.datePicker:
         var date = await showDatePicker(
             context: context,
             initialDate: (params[filter] == "")
@@ -84,8 +84,10 @@ class Chart {
                 ? DateTime.now()
                 : DateTime.fromMillisecondsSinceEpoch(chartConfig["filters"]![filter]["default"](data).toInt())
                 : DateTime.fromMillisecondsSinceEpoch(int.parse(params[filter]!)),
-            firstDate: DateTime(2000),
-            lastDate: DateTime.now(),
+            firstDate: (chartConfig["filters"]![filter].containsKey("min") && chartConfig["filters"]![filter]["min"] != null) ?
+              DateTime.fromMillisecondsSinceEpoch(chartConfig["filters"]![filter]["min"]) : DateTime(2000),
+            lastDate: (chartConfig["filters"]![filter].containsKey("max") && chartConfig["filters"]![filter]["max"] != null) ?
+              DateTime.fromMillisecondsSinceEpoch(chartConfig["filters"]![filter]["max"]) : DateTime.now(),
             helpText: chartConfig["filters"]![filter]["name"],
             cancelText: "Limpar",
             confirmText: "Filtrar"
@@ -114,7 +116,7 @@ class Chart {
       if (chartConfig["filters"]!.containsKey("right")) {
         right = SizedBox(width: 75, height: 25,
             child: ElevatedButton(
-              onPressed: () {_filter("right");},
+              onPressed: (state == ChartState.finished) ? () {_filter("right");} : null,
               child: Text(chartConfig["filters"]!["right"]["name"])
             )
         );
@@ -122,7 +124,7 @@ class Chart {
       if (chartConfig["filters"]!.containsKey("left")) {
         left = SizedBox(width: 75, height: 25,
             child: ElevatedButton(
-              onPressed: () {_filter("left");},
+              onPressed: (state == ChartState.finished) ? () {_filter("left");} : null,
               child: Text(chartConfig["filters"]!["left"]["name"])
             )
         );
@@ -144,9 +146,6 @@ class Chart {
     Widget child;
 
     if (state != ChartState.finished) {
-      final double aspectRatio = chartConfig["chart"]!["size"][0] /
-          chartConfig["chart"]!["size"][1];
-
       child = Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

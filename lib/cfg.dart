@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+enum FilterType {
+  datePicker,
+  sortBy,
+  numericEval
+}
+
 enum DataType {
   date,
   numeric,
@@ -69,13 +75,17 @@ final List<Map<String, Map<String, dynamic>>> chartsConfig = [
       "left": {
         "key": "minData",
         "name": "Início",
-        "type": DataType.date,
+        "type": FilterType.datePicker,
+        "min": DateTime(2008).millisecondsSinceEpoch,
+        "max": null, //TODAY
         "default": filterLesser
       },
       "right": {
         "key": "maxData",
         "name": "Fim",
-        "type": DataType.date,
+        "type": FilterType.datePicker,
+        "min": DateTime(2008).millisecondsSinceEpoch,
+        "max": null, //TODAY
         "default": filterGreater
       }
     }
