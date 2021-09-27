@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dashboard/pie_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -94,6 +95,12 @@ class Chart {
           child = Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: LineChartWidget(data: data, xType: chartConfig["data"]!["xValue"]["type"], ticks: chartConfig["chart"]!["ticks"])
+          );
+          break;
+        case (ChartType.pieChart):
+          child = Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: PieChartWidget(data: data, xType: chartConfig["data"]!["xValue"]["type"]),
           );
           break;
         default:

@@ -9,7 +9,8 @@ enum DataType {
 
 enum ChartType {
   barChart,
-  lineChart
+  lineChart,
+  pieChart
 }
 
 formatData(double value, DataType xType) {
@@ -59,6 +60,21 @@ const List<Map<String, Map<String, dynamic>>> chartsConfig = [
       "xValue": {
         "name": "Data",
         "type": DataType.integer
+      },
+    }
+  },
+  {
+    "chart": {
+      "name": "Barra Teste",
+      "type": ChartType.pieChart,
+      "size": [400, 300]
+    },
+
+    "data": {
+      "query": "http://127.0.0.1:8000",
+      "xValue": {
+        "name": "Data",
+        "type": DataType.date
       },
     }
   },
