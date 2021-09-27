@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     for (var chartConfig in chartsConfig) {
-      charts.add(Chart(chartConfig));
+      charts.add(Chart(chartConfig, context));
     }
 
     eventBus.on<ChartUpdated>().listen((event) {

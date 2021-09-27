@@ -17,11 +17,13 @@ enum ChartState {
 }
 
 class Chart {
-  Map<String, Map<String, dynamic>> chartConfig;
+  Map<String, Map<String, dynamic>> chartConfig = {};
+  BuildContext context;
   ChartState state = ChartState.loading;
   List<List<double>> data = [];
+  Map<String, String> params = {"left": "", "right": ""};
 
-  Chart(this.chartConfig) {
+  Chart(this.chartConfig, this.context) {
     getData();
   }
 
@@ -33,7 +35,15 @@ class Chart {
     while (true) {
       http.Response response;
       try {
-        var url = Uri.parse(chartConfig["data"]!["query"]);
+        Map<String, String> queryParams = {};
+        if (params["left"]! != "") {
+          queryParams[chartConfig["filters"]!["left"]["key"]] = params["left"]!;
+        }
+        if (params["right"]! != "") {
+          queryParams[chartConfig["filters"]!["right"]["key"]] = params["right"]!;
+        }
+        final url = Uri.parse(chartConfig["data"]!["query"] + "?" + Uri(queryParameters: queryParams).query);
+
         response = await http.get(url);
         if (response.statusCode != 200) {
           print("Status code: " + response.statusCode.toString());
@@ -62,6 +72,72 @@ class Chart {
       break;
     }
     eventBus.fire(ChartUpdated(chartConfig["chart"]!["name"]));
+  }
+
+  _filter(String filter) async {
+    switch (chartConfig["filters"]![filter]["type"]) {
+      case DataType.date:
+        var date = await showDatePicker(
+            context: context,
+            initialDate: (params[filter] == "")
+                ? (chartConfig["filters"]![filter]["default"] == null)
+                ? DateTime.now()
+                : DateTime.fromMillisecondsSinceEpoch(chartConfig["filters"]![filter]["default"](data).toInt())
+                : DateTime.fromMillisecondsSinceEpoch(int.parse(params[filter]!)),
+            firstDate: DateTime(2000),
+            lastDate: DateTime.now(),
+            helpText: chartConfig["filters"]![filter]["name"],
+            cancelText: "Limpar",
+            confirmText: "Filtrar"
+        );
+        if (date != null) {
+          params[filter] = date.millisecondsSinceEpoch.toString();
+        } else {
+          params[filter] = "";
+        }
+        getData();
+        break;
+      default:
+        break;
+    }
+  }
+
+  Widget _getHeader() {
+    final title = Text(
+        chartConfig["chart"]!["name"],
+        style: const TextStyle(color: Colors.white, fontSize: 22)
+    );
+
+    Widget left = const SizedBox(width: 100);
+    Widget right = const SizedBox(width: 100);
+    if (chartConfig.containsKey("filters")) {
+      if (chartConfig["filters"]!.containsKey("right")) {
+        right = SizedBox(width: 75, height: 25,
+            child: ElevatedButton(
+              onPressed: () {_filter("right");},
+              child: Text(chartConfig["filters"]!["right"]["name"])
+            )
+        );
+      }
+      if (chartConfig["filters"]!.containsKey("left")) {
+        left = SizedBox(width: 75, height: 25,
+            child: ElevatedButton(
+              onPressed: () {_filter("left");},
+              child: Text(chartConfig["filters"]!["left"]["name"])
+            )
+        );
+      }
+    }
+
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          left,
+          title,
+          right
+        ]
+    );
   }
 
   Widget getGraph() {
@@ -94,7 +170,7 @@ class Chart {
           break;
         case (ChartType.lineChart):
           child = Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
             child: LineChartWidget(data: data, xType: chartConfig["data"]!["xValue"]["type"], ticks: chartConfig["chart"]!["ticks"])
           );
           break;
@@ -115,6 +191,8 @@ class Chart {
       }
     }
 
+    Widget header = _getHeader();
+
     final container = SizedBox(
         width: chartConfig["chart"]!["size"][0],
         height: chartConfig["chart"]!["size"][1],
@@ -128,12 +206,9 @@ class Chart {
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.all(10),
                 child: Center(
-                  child: Text(
-                    chartConfig["chart"]!["name"],
-                    style: const TextStyle(color: Colors.white, fontSize: 22)
-                  )
+                  child: header
                 )
               ),
               Expanded(

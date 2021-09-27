@@ -25,6 +25,22 @@ formatData(double value, DataType xType) {
   }
 }
 
+double sortFilter(bool greater, List<List<double>> data) {
+
+  if (greater) {
+    return data.reduce((a, b) => a[0] > b[0] ? a : b)[0];
+  }
+  return data.reduce((a, b) => a[0] < b[0] ? a : b)[0];
+}
+
+double filterGreater(List<List<double>> data) {
+  return sortFilter(true, data);
+}
+
+double filterLesser(List<List<double>> data) {
+  return sortFilter(false, data);
+}
+
 
 const Map<String, dynamic> uiConfig = {
   "name": "Mobi7 Dashboard",
@@ -32,7 +48,7 @@ const Map<String, dynamic> uiConfig = {
   "brightness": Brightness.dark
 };
 
-const List<Map<String, Map<String, dynamic>>> chartsConfig = [
+final List<Map<String, Map<String, dynamic>>> chartsConfig = [
   {
     "chart": {
       "name": "Linha Teste",
@@ -47,6 +63,21 @@ const List<Map<String, Map<String, dynamic>>> chartsConfig = [
         "name": "Data",
         "type": DataType.date
       },
+    },
+
+    "filters": {
+      "left": {
+        "key": "minData",
+        "name": "Início",
+        "type": DataType.date,
+        "default": filterLesser
+      },
+      "right": {
+        "key": "maxData",
+        "name": "Fim",
+        "type": DataType.date,
+        "default": filterGreater
+      }
     }
   },
   {
