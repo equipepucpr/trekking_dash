@@ -42,6 +42,7 @@ class LineChartWidget extends StatelessWidget {
         ),
         titlesData: titlesData(),
         borderData: borderData,
+        clipData: FlClipData.all(),
         lineBarsData: [getData()]
       ),
     );

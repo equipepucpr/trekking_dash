@@ -8,6 +8,7 @@ import 'bar_chart.dart';
 import 'cfg.dart';
 import 'events.dart';
 import 'line_chart.dart';
+import 'list_view.dart';
 
 enum ChartState {
   loading,
@@ -101,6 +102,12 @@ class Chart {
           child = Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: PieChartWidget(data: data, xType: chartConfig["data"]!["xValue"]["type"]),
+          );
+          break;
+        case (ChartType.listView):
+          child = Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            child: ListViewWidget(data: data, xType: chartConfig["data"]!["xValue"]["type"]),
           );
           break;
         default:
