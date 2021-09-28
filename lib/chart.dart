@@ -20,10 +20,13 @@ class Chart {
   Map<String, Map<String, dynamic>> chartConfig = {};
   BuildContext context;
   ChartState state = ChartState.loading;
-  List<List<double>> data = [];
+  List<List<Object>> data = [];
   Map<String, String> params = {"left": "", "right": ""};
 
   Chart(this.chartConfig, this.context) {
+    if (chartConfig["chart"]!["type"] == ChartType.lineChart && chartConfig["data"]!["xType"] == DataType.string) {
+      throw Exception("X data of type String isn't compatible with chart type LineChart");
+    }
     getData();
   }
 
@@ -56,7 +59,7 @@ class Chart {
           continue;
         }
 
-        data = <List<double>>[for (var value in jsonDecode(response.body)["data"] as List) <double>[value[0], value[1]]];
+        data = <List<Object>>[for (var value in jsonDecode(response.body)["data"] as List) <Object>[value[0], value[1]]];
       } catch (e) {
         print(e);
         acc++;
@@ -82,7 +85,7 @@ class Chart {
             initialDate: (params[filter] == "")
                 ? (chartConfig["filters"]![filter]["default"] == null)
                 ? DateTime.now()
-                : DateTime.fromMillisecondsSinceEpoch(chartConfig["filters"]![filter]["default"](data).toInt())
+                : DateTime.fromMillisecondsSinceEpoch((chartConfig["filters"]![filter]["default"](data) as double).toInt())
                 : DateTime.fromMillisecondsSinceEpoch(int.parse(params[filter]!)),
             firstDate: (chartConfig["filters"]![filter].containsKey("min") && chartConfig["filters"]![filter]["min"] != null) ?
               DateTime.fromMillisecondsSinceEpoch(chartConfig["filters"]![filter]["min"]) : DateTime(2000),
@@ -169,25 +172,25 @@ class Chart {
         case (ChartType.barChart):
           child = Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
-              child: BarChartWidget(data: data, xType: chartConfig["data"]!["xValue"]["type"])
+              child: BarChartWidget(data: data, xType: chartConfig["data"]!["xType"])
           );
           break;
         case (ChartType.lineChart):
           child = Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-            child: LineChartWidget(data: data, xType: chartConfig["data"]!["xValue"]["type"], ticks: chartConfig["chart"]!["ticks"])
+            child: LineChartWidget(data: data, xType: chartConfig["data"]!["xType"], ticks: chartConfig["chart"]!["ticks"])
           );
           break;
         case (ChartType.pieChart):
           child = Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
-              child: PieChartWidget(data: data, xType: chartConfig["data"]!["xValue"]["type"]),
+              child: PieChartWidget(data: data, xType: chartConfig["data"]!["xType"]),
           );
           break;
         case (ChartType.listView):
           child = Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
-            child: ListViewWidget(data: data, xType: chartConfig["data"]!["xValue"]["type"]),
+            child: ListViewWidget(data: data, xType: chartConfig["data"]!["xType"]),
           );
           break;
         default:

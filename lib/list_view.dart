@@ -7,7 +7,7 @@ class ListViewWidget extends StatelessWidget {
     required this.xType
   }) : super(key: key);
 
-  final List<List<double>> data;
+  final List<List<Object>> data;
   final DataType xType;
   final ScrollController _scrollController = ScrollController();
   
@@ -22,7 +22,7 @@ class ListViewWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(formatData(value[0], xType) + ":", style: const TextStyle(fontWeight: FontWeight.bold)),
-                Text(value[1].toStringAsFixed(2))
+                Text((value[1] as double).toStringAsFixed(2))
               ]
             )
           )
@@ -51,7 +51,7 @@ class ListViewWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(formatData(data[index][0], xType) + ":", style: const TextStyle(fontWeight: FontWeight.bold)),
-                    Text(data[index][1].toStringAsFixed(2))
+                    Text((data[index][1] as double).toStringAsFixed(2))
                   ]
                 )
               )

@@ -15,7 +15,7 @@ class LineChartWidget extends StatelessWidget {
     required this.ticks
   }) : super(key: key);
 
-  final List<List<double>> data;
+  final List<List<Object>> data;
   final DataType xType;
   final List<int?> ticks;
 
@@ -52,7 +52,7 @@ class LineChartWidget extends StatelessWidget {
 
   getData() {
     return LineChartBarData(
-      spots: [for (var value in data) FlSpot(value[0], value[1])],
+      spots: [for (var value in data) FlSpot(value[0] as double, value[1] as double)],
       isCurved: true,
       colors: gradientColors,
       barWidth: 5,
@@ -68,8 +68,8 @@ class LineChartWidget extends StatelessWidget {
   }
 
   getDelta() {
-    final x = data.reduce((a, b) => a[0] > b[0] ? a : b)[0] - data.reduce((a, b) => a[0] < b[0] ? a : b)[0];
-    final y = data.reduce((a, b) => a[1] > b[1] ? a : b)[1] - data.reduce((a, b) => a[1] < b[1] ? a : b)[1];
+    final x = (data.reduce((a, b) => (a[0] as double) > (b[0] as double) ? a : b)[0] as double) - (data.reduce((a, b) => (a[0] as double) < (b[0] as double) ? a : b)[0] as double);
+    final y = (data.reduce((a, b) => (a[1] as double) > (b[1] as double) ? a : b)[1] as double) - (data.reduce((a, b) => (a[1] as double) < (b[1] as double) ? a : b)[1] as double);
 
     return [x, y];
   }

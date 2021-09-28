@@ -9,13 +9,13 @@ class BarChartWidget extends StatelessWidget {
     required this.xType,
   }) : super(key: key);
 
-  final List<List<double>> data;
+  final List<List<Object>> data;
   final DataType xType;
 
   @override
   Widget build(BuildContext context) {
-    final maxY = data.reduce((a, b) => a[1] > b[1] ? a : b)[1];
-    final minY = data.reduce((a, b) => a[1] < b[1] ? a : b)[1];
+    final maxY = data.reduce((a, b) => (a[1] as double) > (b[1] as double) ? a : b)[1] as double;
+    final minY = data.reduce((a, b) => (a[1] as double) < (b[1] as double) ? a : b)[1] as double;
     return BarChart(
       BarChartData(
         barTouchData: barTouchData,
@@ -85,7 +85,7 @@ class BarChartWidget extends StatelessWidget {
           x: len - i,
           barRods: [
             BarChartRodData(
-                y: data[i][1], colors: [Colors.lightBlueAccent, Colors.greenAccent])
+                y: data[i][1] as double, colors: [Colors.lightBlueAccent, Colors.greenAccent])
           ],
           showingTooltipIndicators: [0],
         )

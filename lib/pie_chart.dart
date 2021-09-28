@@ -23,7 +23,7 @@ class PieChartWidget extends StatefulWidget {
     required this.data,
     required this.xType,}) : super(key: key);
 
-  final List<List<double>> data;
+  final List<List<Object>> data;
   final DataType xType;
 
   @override
@@ -34,7 +34,7 @@ class PieChartState extends State<PieChartWidget> {
   int touchedIndex = -1;
 
   double getPercentage(int index) {
-    return widget.data[index][1] * 100.0 / widget.data.fold(0, (p, c) => p + c[1]);
+    return (widget.data[index][1] as double) * 100.0 / widget.data.fold(0, (p, c) => p + (c[1] as double));
   }
 
   List<PieChartSectionData> showingSections() {

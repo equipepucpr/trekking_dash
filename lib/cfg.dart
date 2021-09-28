@@ -11,6 +11,7 @@ enum DataType {
   date,
   numeric,
   integer,
+  string
 }
 
 enum ChartType {
@@ -20,30 +21,39 @@ enum ChartType {
   listView
 }
 
-formatData(double value, DataType xType) {
+String formatData(dynamic value, DataType xType) {
   switch (xType) {
     case DataType.date:
       return DateFormat("dd/MM/yy").format(DateTime.fromMillisecondsSinceEpoch(value.toInt()));
     case DataType.numeric:
-      return NumberFormat.compact(locale: 'pt-BR').format(value);
+      return NumberFormat.compact(locale: 'pt-BR').format(value as double);
+    case DataType.string:
+      return (value as String);
     default:
       return value.toString();
   }
 }
 
-double sortFilter(bool greater, List<List<double>> data) {
-
-  if (greater) {
-    return data.reduce((a, b) => a[0] > b[0] ? a : b)[0];
+Object sortFilter(bool greater, List<List<Object>> data) {
+  if (data[0][0] is num) {
+    if (greater) {
+      return data.reduce((a, b) => (a[0] as double) > (b[0] as double) ? a : b)[0];
+    }
+    return data.reduce((a, b) => (a[0] as double) < (b[0] as double) ? a : b)[0];
   }
-  return data.reduce((a, b) => a[0] < b[0] ? a : b)[0];
+  if (greater) {
+    return data.reduce((a, b) => (a[0] as String).compareTo(b[0] as String) > 0 ? a : b)[0];
+  }
+  return data.reduce((a, b) => (a[0] as String).compareTo(b[0] as String) < 0 ? a : b)[0];
+
+
 }
 
-double filterGreater(List<List<double>> data) {
+Object filterGreater(List<List<Object>> data) {
   return sortFilter(true, data);
 }
 
-double filterLesser(List<List<double>> data) {
+Object filterLesser(List<List<Object>> data) {
   return sortFilter(false, data);
 }
 
@@ -65,10 +75,7 @@ final List<Map<String, Map<String, dynamic>>> chartsConfig = [
 
     "data": {
       "query": "http://127.0.0.1:8000",
-      "xValue": {
-        "name": "Data",
-        "type": DataType.date
-      },
+      "xType": DataType.date
     },
 
     "filters": {
@@ -99,10 +106,7 @@ final List<Map<String, Map<String, dynamic>>> chartsConfig = [
 
     "data": {
       "query": "http://127.0.0.1:800",
-      "xValue": {
-        "name": "Data",
-        "type": DataType.integer
-      },
+      "xType": DataType.date
     }
   },
   {
@@ -113,11 +117,8 @@ final List<Map<String, Map<String, dynamic>>> chartsConfig = [
     },
 
     "data": {
-      "query": "http://127.0.0.1:8000",
-      "xValue": {
-        "name": "Data",
-        "type": DataType.date
-      },
+      "query": "http://127.0.0.1:8080",
+      "xType": DataType.string
     }
   },
   {
@@ -129,10 +130,7 @@ final List<Map<String, Map<String, dynamic>>> chartsConfig = [
 
     "data": {
       "query": "http://127.0.0.1:8000",
-      "xValue": {
-        "name": "Data",
-        "type": DataType.date
-      },
+      "xType": DataType.date
     }
   },
   {
@@ -144,10 +142,7 @@ final List<Map<String, Map<String, dynamic>>> chartsConfig = [
 
     "data": {
       "query": "http://127.0.0.1:8000",
-      "xValue": {
-        "name": "Data",
-        "type": DataType.date
-      },
+      "xType": DataType.date
     }
   }
 ];
