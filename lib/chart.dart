@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dashboard/pie_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 import 'bar_chart.dart';
@@ -78,8 +79,8 @@ class Chart {
   }
 
   _filterAction(String filter) async {
-    switch (chartConfig["filters"]![filter]["type"]) {
-      case FilterType.datePicker:
+    switch (chartConfig["data"]!["xType"]) {
+      case DataType.date:
         var date = await showDatePicker(
             context: context,
             initialDate: (params[filter] == "")
@@ -102,6 +103,55 @@ class Chart {
         }
         getData();
         break;
+      case DataType.numeric:
+      case DataType.integer:
+        String filterValue = (params[filter] == "")
+            ? (chartConfig["filters"]![filter]["default"] == null)
+            ? ""
+            : (chartConfig["filters"]![filter]["default"](data) as double).toInt().toString()
+            : params[filter]!;
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(chartConfig["filters"]![filter]["name"]),
+              content: SingleChildScrollView(
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Valor para filtrar',
+                  ),
+                  initialValue: filterValue,
+                  onChanged: (value) {
+                      filterValue = value;
+                  },
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Limpar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    params[filter] = "";
+                    getData();
+                  }
+                ),
+                TextButton(
+                  child: const Text('Filtrar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    params[filter] = filterValue;
+                    getData();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        break;
       default:
         break;
     }
@@ -109,16 +159,11 @@ class Chart {
 
   Widget _filterWidget(String filter) {
     final Widget? child;
-    switch (chartConfig["filters"]![filter]["type"]) {
-      case FilterType.datePicker:
-        child = ElevatedButton(
-            onPressed: (state == ChartState.finished) ? () {_filterAction(filter);} : null,
-            child: Text(chartConfig["filters"]![filter]["name"])
-        );
-        break;
-      default:
-        child = null;
-    }
+    child = ElevatedButton(
+        onPressed: (state == ChartState.finished) ? () {_filterAction(filter);} : null,
+        child: Text(chartConfig["filters"]![filter]["name"])
+    );
+
     return SizedBox(width: 75, height: 25, child: child);
   }
 

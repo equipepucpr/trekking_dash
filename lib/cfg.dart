@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 
 enum FilterType {
   datePicker,
-  sortBy,
   numericEval
 }
 
@@ -82,7 +81,6 @@ final List<Map<String, Map<String, dynamic>>> chartsConfig = [
       "left": {
         "key": "minData",
         "name": "Início",
-        "type": FilterType.datePicker,
         "min": DateTime(2008).millisecondsSinceEpoch,
         "max": null, //TODAY
         "default": filterLesser
@@ -90,7 +88,6 @@ final List<Map<String, Map<String, dynamic>>> chartsConfig = [
       "right": {
         "key": "maxData",
         "name": "Fim",
-        "type": FilterType.datePicker,
         "min": DateTime(2008).millisecondsSinceEpoch,
         "max": null, //TODAY
         "default": filterGreater
@@ -130,7 +127,17 @@ final List<Map<String, Map<String, dynamic>>> chartsConfig = [
 
     "data": {
       "query": "http://127.0.0.1:8000",
-      "xType": DataType.date
+      "xType": DataType.numeric
+    },
+
+    "filters": {
+      "right": {
+        "key": "maxVal",
+        "name": "Fim",
+        "min": null,
+        "max": null, //TODAY
+        "default": filterGreater
+      }
     }
   },
   {
