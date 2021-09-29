@@ -21,6 +21,7 @@ class LineChartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final minMax = getMaxMin();
     return LineChart(
       LineChartData(
         lineTouchData: LineTouchData(
@@ -44,6 +45,10 @@ class LineChartWidget extends StatelessWidget {
         ),
         titlesData: titlesData(),
         borderData: borderData,
+        maxY: minMax[1][1],
+        minY: minMax[0][1],
+        maxX: minMax[1][0],
+        minX: minMax[0][0],
         clipData: FlClipData.all(),
         lineBarsData: [getData()]
       ),
@@ -53,7 +58,7 @@ class LineChartWidget extends StatelessWidget {
   getData() {
     return LineChartBarData(
       spots: [for (var value in data) FlSpot(value[0] as double, value[1] as double)],
-      isCurved: true,
+      isCurved: false,
       colors: gradientColors,
       barWidth: 5,
       isStrokeCapRound: true,
@@ -67,6 +72,19 @@ class LineChartWidget extends StatelessWidget {
     );
   }
 
+  getMaxMin() {
+    final maxX = (data.reduce((a, b) => (a[0] as double) > (b[0] as double) ? a : b)[0] as double);
+    final minX = (data.reduce((a, b) => (a[0] as double) < (b[0] as double) ? a : b)[0] as double);
+    final maxY = (data.reduce((a, b) => (a[1] as double) > (b[1] as double) ? a : b)[1] as double);
+    final minY = (data.reduce((a, b) => (a[1] as double) < (b[1] as double) ? a : b)[1] as double);
+
+    final deltaX = maxX - minX;
+    final deltaY = maxY - minY;
+    const coef = 0.1;
+
+    return [[minX, minY], [maxX, maxY + deltaY*coef]];
+  }
+
   getDelta() {
     final x = (data.reduce((a, b) => (a[0] as double) > (b[0] as double) ? a : b)[0] as double) - (data.reduce((a, b) => (a[0] as double) < (b[0] as double) ? a : b)[0] as double);
     final y = (data.reduce((a, b) => (a[1] as double) > (b[1] as double) ? a : b)[1] as double) - (data.reduce((a, b) => (a[1] as double) < (b[1] as double) ? a : b)[1] as double);
@@ -78,6 +96,7 @@ class LineChartWidget extends StatelessWidget {
     final delta = getDelta();
     final sideTitle = SideTitles(
       showTitles: true,
+      reservedSize: 45,
       interval: (ticks[1] == null) ? null : delta[1]/(ticks[1]! - 1),
       getTextStyles: (context, value) => const TextStyle(
         color: Color(0xff7589a2),
@@ -104,7 +123,7 @@ class LineChartWidget extends StatelessWidget {
       ),
       leftTitles: sideTitle,
       topTitles: SideTitles(showTitles: false),
-      rightTitles: sideTitle,
+      rightTitles: SideTitles(showTitles: true, reservedSize: 20, getTextStyles: (context, value) => const TextStyle(color: Color(0x00000000))),
     );
   }
 

@@ -10,6 +10,7 @@ import 'cfg.dart';
 import 'events.dart';
 import 'line_chart.dart';
 import 'list_view.dart';
+import 'num_view.dart';
 
 enum ChartState {
   loading,
@@ -21,7 +22,7 @@ class Chart {
   Map<String, Map<String, dynamic>> chartConfig = {};
   BuildContext context;
   ChartState state = ChartState.loading;
-  List<List<Object>> data = [];
+  Object data = [];
   Map<String, String> params = {"left": "", "right": ""};
 
   Chart(this.chartConfig, this.context) {
@@ -59,8 +60,7 @@ class Chart {
           await Future.delayed(const Duration(seconds: 2));
           continue;
         }
-
-        data = <List<Object>>[for (var value in jsonDecode(response.body)["data"] as List) <Object>[value[0], value[1]]];
+        data = jsonDecode(response.body);
       } catch (e) {
         print(e);
         acc++;
@@ -215,28 +215,19 @@ class Chart {
     } else {
       switch (chartConfig["chart"]!["type"]) {
         case (ChartType.barChart):
-          child = Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: BarChartWidget(data: data, xType: chartConfig["data"]!["xType"])
-          );
+          child = BarChartWidget(data: chartConfig["chart"]!["getData"](data), xType: chartConfig["data"]!["xType"]);
           break;
         case (ChartType.lineChart):
-          child = Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-            child: LineChartWidget(data: data, xType: chartConfig["data"]!["xType"], ticks: chartConfig["chart"]!["ticks"])
-          );
+          child = LineChartWidget(data: chartConfig["chart"]!["getData"](data), xType: chartConfig["data"]!["xType"], ticks: chartConfig["chart"]!["ticks"]);
           break;
         case (ChartType.pieChart):
-          child = Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: PieChartWidget(data: data, xType: chartConfig["data"]!["xType"]),
-          );
+          child = PieChartWidget(data: chartConfig["chart"]!["getData"](data), xType: chartConfig["data"]!["xType"]);
           break;
         case (ChartType.listView):
-          child = Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: ListViewWidget(data: data, xType: chartConfig["data"]!["xType"]),
-          );
+          child = ListViewWidget(data: chartConfig["chart"]!["getData"](data), xType: chartConfig["data"]!["xType"]);
+          break;
+        case (ChartType.numView):
+          child = NumViewWidget(data: chartConfig["chart"]!["getData"](data), xType: chartConfig["data"]!["xType"]);
           break;
         default:
           child = const Text("Invalid type!");
@@ -264,7 +255,10 @@ class Chart {
                 )
               ),
               Expanded(
-                child: child
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: child,
+                )
               )
             ]
           ),

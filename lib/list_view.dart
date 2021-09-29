@@ -49,10 +49,10 @@ class ListViewWidget extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  children: (data[index].length > 1) ? [
                     Text(formatData(data[index][0], xType) + ":", style: const TextStyle(fontWeight: FontWeight.bold)),
                     Text((data[index][1] as double).toStringAsFixed(2))
-                  ]
+                  ] : [Text(formatData(data[index][0], xType), style: const TextStyle(fontWeight: FontWeight.bold))]
                 )
               )
             )
