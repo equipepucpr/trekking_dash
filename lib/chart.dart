@@ -218,7 +218,10 @@ class Chart {
           child = BarChartWidget(data: chartConfig["chart"]!["getData"](data), xType: chartConfig["data"]!["xType"]);
           break;
         case (ChartType.lineChart):
-          child = LineChartWidget(data: chartConfig["chart"]!["getData"](data), xType: chartConfig["data"]!["xType"], ticks: chartConfig["chart"]!["ticks"]);
+          child = LineChartWidget(data: chartConfig["chart"]!["getData"](data),
+            xType: chartConfig["data"]!["xType"],
+            ticks: chartConfig["chart"]!["ticks"],
+            titles: chartConfig["chart"]!["titles"]);
           break;
         case (ChartType.pieChart):
           child = PieChartWidget(data: chartConfig["chart"]!["getData"](data), xType: chartConfig["data"]!["xType"]);

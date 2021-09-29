@@ -12,16 +12,20 @@ class LineChartWidget extends StatelessWidget {
   const LineChartWidget({Key? key,
     required this.data,
     required this.xType,
-    required this.ticks
+    required this.ticks,
+    required this.titles,
   }) : super(key: key);
 
   final List<List<Object>> data;
   final DataType xType;
   final List<int?> ticks;
+  final List<String> titles;
 
   @override
   Widget build(BuildContext context) {
     final minMax = getMaxMin();
+    final delta = getDelta();
+
     return LineChart(
       LineChartData(
         lineTouchData: LineTouchData(
@@ -50,8 +54,32 @@ class LineChartWidget extends StatelessWidget {
         maxX: minMax[1][0],
         minX: minMax[0][0],
         clipData: FlClipData.all(),
-        lineBarsData: [getData()]
+        lineBarsData: [getData()],
+        axisTitleData: getAxisTitles(),
+        gridData: FlGridData(
+          verticalInterval: (ticks[0] == null) ? null : delta[0]/(ticks[0]!*3 - 1),
+          horizontalInterval: (ticks[1] == null) ? null : delta[1]/(ticks[1]! - 1),
+        )
       ),
+    );
+  }
+
+  FlAxisTitleData getAxisTitles() {
+    return FlAxisTitleData(
+        leftTitle: AxisTitle(
+          showTitle: (titles[1] != "") ? true : false,
+          titleText: titles[1],
+          textStyle: const TextStyle(
+            color: Color(0xff7589a2)
+          )
+        ),
+        bottomTitle: AxisTitle(
+          showTitle: (titles[0] != "") ? true : false,
+          titleText: titles[0],
+          textStyle: const TextStyle(
+            color: Color(0xff7589a2)
+          ),
+        )
     );
   }
 

@@ -77,6 +77,7 @@ final List<Map<String, dynamic>> chartsConfig = [
           "type": ChartType.lineChart,
           "size": [800, 300],
           "ticks": [7, 5],
+          "titles": ["", "Veículos"],
           "getData": (List<dynamic> data) {
             return <List<Object>>[
               for (var value in data) (value as List).cast<Object>()
@@ -86,7 +87,7 @@ final List<Map<String, dynamic>> chartsConfig = [
 
         "data": {
           "query": "http://127.0.0.1:5000/total_active/time_series",
-          "xType": DataType.date
+          "xType": DataType.date,
         },
       },
       {
@@ -118,7 +119,8 @@ final List<Map<String, dynamic>> chartsConfig = [
           "name": "Série Histórica",
           "type": ChartType.lineChart,
           "size": [400, 300],
-          "ticks": [5, 5],
+          "ticks": [3, 5],
+          "titles": ["", "Veículos"],
           "getData": (List<dynamic> data) {
             return <List<Object>>[
               for (var value in data) (value as List).cast<Object>()
@@ -170,7 +172,7 @@ final List<Map<String, dynamic>> chartsConfig = [
 
   {
     "section": {
-      "name": "Não Reportando",
+      "name": "Não Posicionando",
       "color": const Color(0x402c4260)
     },
     "charts": [
@@ -179,7 +181,8 @@ final List<Map<String, dynamic>> chartsConfig = [
           "name": "Série Histórica",
           "type": ChartType.lineChart,
           "size": [400, 300],
-          "ticks": [5, 5],
+          "ticks": [3, 5],
+          "titles": ["", "Veículos"],
           "getData": (List<dynamic> data) {
             return <List<Object>>[
               for (var value in data) (value as List).cast<Object>()
