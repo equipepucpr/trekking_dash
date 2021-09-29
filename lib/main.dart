@@ -1,3 +1,4 @@
+import 'package:dashboard/section.dart';
 import 'package:flutter/material.dart';
 
 import 'cfg.dart';
@@ -34,14 +35,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Chart> charts = [];
+  List<Section> sections = [];
 
   @override
   void initState() {
     super.initState();
 
-    for (var chartConfig in chartsConfig) {
-      charts.add(Chart(chartConfig, context));
+    for (var section in chartsConfig) {
+      sections.add(Section(section, context));
     }
 
     eventBus.on<ChartUpdated>().listen((event) {
@@ -52,53 +53,13 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  List<Widget> chartLayout() {
-    List<Widget> widgets = [const SizedBox(height: 25)];
-    double width = MediaQuery.of(context).size.width*0.95;
-    double curWidth = width;
-    List<Widget> curRow = [];
-    List<List<Widget>> rows = [];
-
-    double maxWidth = 0;
-
-    for (Chart chart in charts) {
-      double chartSize = chart.chartConfig["chart"]!["size"][0];
-      if (chartSize > maxWidth) {
-        maxWidth = chartSize;
-        if (maxWidth > width) {
-          return [
-            Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.25),
-              child: const Text("Resolução inválida!")
-            )
-          ];
-        }
-      }
-
-      if (curWidth - chartSize >= 0) {
-        curRow.add(chart.getGraph());
-        curWidth -= chartSize;
-      } else {
-        if (curRow.isNotEmpty) {
-          rows.add(List.from(curRow));
-        }
-
-        curWidth = width - chartSize;
-        curRow = [chart.getGraph()];
-      }
-    }
-    rows.add(curRow);
-
-    for (var row in rows) {
-      widgets.add(
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: row
-        )
-      );
+  List<Widget> getSections() {
+    List<Widget> ret = [];
+    for (var section in sections) {
+      ret.add(section.getSection());
     }
 
-    return widgets;
+    return ret;
   }
 
   @override
@@ -111,7 +72,7 @@ class _HomePageState extends State<HomePage> {
         child: Center (
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: chartLayout()
+            children: getSections()
           ),
         )
       )// This trailing comma makes auto-formatting nicer for build methods.
