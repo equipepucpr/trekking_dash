@@ -24,7 +24,7 @@ enum ChartType {
 String formatData(dynamic value, DataType xType) {
   switch (xType) {
     case DataType.date:
-      return DateFormat("dd/MM/yy").format(DateTime.fromMillisecondsSinceEpoch(value.toInt()));
+      return DateFormat("dd/MM/yy").format(DateTime.fromMicrosecondsSinceEpoch(value.toInt()));
     case DataType.numeric:
       return NumberFormat.compact(locale: 'pt-BR').format(value as double);
     case DataType.string:

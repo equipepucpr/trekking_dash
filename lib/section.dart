@@ -48,7 +48,7 @@ class Section {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const[
-                        Text("Resolução inválida!", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                        Text("Resolução inválida!", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                         Padding(padding: EdgeInsets.only(bottom: 10))
                       ]
                     )

@@ -86,12 +86,12 @@ class Chart {
             initialDate: (params[filter] == "")
                 ? (chartConfig["filters"]![filter]["default"] == null)
                 ? DateTime.now()
-                : DateTime.fromMillisecondsSinceEpoch((chartConfig["filters"]![filter]["default"](data) as double).toInt())
-                : DateTime.fromMillisecondsSinceEpoch(int.parse(params[filter]!)),
+                : DateTime.fromMicrosecondsSinceEpoch((chartConfig["filters"]![filter]["default"](data) as double).toInt())
+                : DateTime.fromMicrosecondsSinceEpoch(int.parse(params[filter]!)),
             firstDate: (chartConfig["filters"]![filter].containsKey("min") && chartConfig["filters"]![filter]["min"] != null) ?
-              DateTime.fromMillisecondsSinceEpoch(chartConfig["filters"]![filter]["min"]) : DateTime(2000),
+              DateTime.fromMicrosecondsSinceEpoch(chartConfig["filters"]![filter]["min"]) : DateTime(2000),
             lastDate: (chartConfig["filters"]![filter].containsKey("max") && chartConfig["filters"]![filter]["max"] != null) ?
-              DateTime.fromMillisecondsSinceEpoch(chartConfig["filters"]![filter]["max"]) : DateTime.now(),
+              DateTime.fromMicrosecondsSinceEpoch(chartConfig["filters"]![filter]["max"]) : DateTime.now(),
             helpText: chartConfig["filters"]![filter]["name"],
             cancelText: "Limpar",
             confirmText: "Filtrar"
