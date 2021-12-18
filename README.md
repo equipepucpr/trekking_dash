@@ -1,6 +1,6 @@
-# dashboard
+# Trekking Dashboard
 
-Mobi7 Dashboard
+Dashboard to monitor our Trekking robot position and stats live!
 
 ## Getting Started
 
