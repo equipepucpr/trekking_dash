@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dashboard/pie_chart.dart';
@@ -29,11 +30,12 @@ class Chart {
     if (chartConfig["chart"]!["type"] == ChartType.lineChart && chartConfig["data"]!["xType"] == DataType.string) {
       throw Exception("X data of type String isn't compatible with chart type LineChart");
     }
-    getData();
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      getData();
+    });
   }
 
   getData() async {
-    state = ChartState.loading;
     eventBus.fire(ChartUpdated(chartConfig["chart"]!["name"]));
 
     int acc = 0;
@@ -57,7 +59,7 @@ class Chart {
             state = ChartState.error;
             break;
           }
-          await Future.delayed(const Duration(seconds: 2));
+          await Future.delayed(const Duration(milliseconds: 500));
           continue;
         }
         data = jsonDecode(response.body);
@@ -68,7 +70,7 @@ class Chart {
           state = ChartState.error;
           break;
         }
-        await Future.delayed(const Duration(seconds: 2));
+        await Future.delayed(const Duration(milliseconds: 500));
         continue;
       }
 

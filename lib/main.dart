@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dashboard/section.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +50,9 @@ class _HomePageState extends State<HomePage> {
     eventBus.on<ChartUpdated>().listen((event) {
       print("Chart updated: " + event.name);
       if (mounted) {
-        setState(() {});
+        Timer.periodic(const Duration(seconds: 1), (timer) {
+          setState(() {});
+        });
       }
     });
   }
