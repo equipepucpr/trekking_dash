@@ -59,7 +59,7 @@ Object filterLesser(List<List<Object>> data) {
 
 
 const Map<String, dynamic> uiConfig = {
-  "name": "Mobi7 Dashboard",
+  "name": "Trekking Dashboard",
   "color": Colors.blue,
   "brightness": Brightness.dark,
 };
