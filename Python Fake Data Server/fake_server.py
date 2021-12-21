@@ -12,7 +12,10 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.route('/coordinates')
 @cross_origin()
 def coordinates():
-    return {'x': math.cos(time.time() - start), 'y': math.sin(time.time() - start)}
+    return {'Trekking':{'x': 15+10*math.cos((time.time() - start)*1/(2*math.pi)), 'y': 15+10*math.sin((time.time() - start)*1/(2*math.pi))},
+    'Cone 1': {'x':40,'y':20},
+    'Cone 2': {'x':30,'y':2},
+    'Cone 3': {'x':6,'y':18}}
 
 @app.route('/ram_usage')
 @cross_origin()

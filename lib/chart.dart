@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:dashboard/pie_chart.dart';
+import 'package:trekk_dash/pie_chart.dart';
+import 'package:trekk_dash/scatter_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -228,6 +229,9 @@ class Chart {
         case (ChartType.pieChart):
           child = PieChartWidget(data: chartConfig["chart"]!["getData"](data), xType: chartConfig["data"]!["xType"]);
           break;
+        case (ChartType.scatterChart):
+          child = ScatterChartWidget(data: chartConfig["chart"]!["getData"](data), xType: chartConfig["data"]!["xType"]);
+          break;
         case (ChartType.listView):
           child = ListViewWidget(data: chartConfig["chart"]!["getData"](data), xType: chartConfig["data"]!["xType"]);
           break;
@@ -264,7 +268,10 @@ class Chart {
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   child: child,
                 )
-              )
+              ),
+              const Padding(
+                padding: EdgeInsets.all(10),
+              ),
             ]
           ),
         )

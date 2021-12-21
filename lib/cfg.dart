@@ -17,8 +17,9 @@ enum ChartType {
   barChart,
   lineChart,
   pieChart,
+  scatterChart,
   listView,
-  numView
+  numView,
 }
 
 String formatData(dynamic value, DataType xType) {
@@ -107,6 +108,30 @@ final List<Map<String, dynamic>> chartsConfig = [
   //     },
   //   ]
   // },
+
+  {
+    "section": {
+      "name": "Robot Position",
+      "color": const Color(0x402c4260)
+    },
+    "charts": [
+      {
+        "chart": {
+          "name": "Trekking Map",
+          "type": ChartType.scatterChart,
+          "size": [800, 500],
+          "getData": (Map data) {
+            return <List<Object>> [for (var d in data.entries) [d.value['x'],d.value['y'],d.key]];
+          }
+        },
+
+        "data": {
+          "query": "http://localhost:5000/coordinates",
+          "xType": DataType.string
+        },
+      },
+    ]
+  },
 
   {
     "section": {

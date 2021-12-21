@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:dashboard/section.dart';
+import 'package:trekk_dash/section.dart';
 import 'package:flutter/material.dart';
 
 import 'cfg.dart';
-import 'chart.dart';
 import 'events.dart';
 
 void main() {
@@ -48,7 +47,6 @@ class _HomePageState extends State<HomePage> {
     }
 
     eventBus.on<ChartUpdated>().listen((event) {
-      print("Chart updated: " + event.name);
       if (mounted) {
         Timer.periodic(const Duration(seconds: 1), (timer) {
           setState(() {});
@@ -58,7 +56,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> getSections() {
-    List<Widget> ret = [];
+    List<Widget> ret = [const Padding(padding: EdgeInsets.all(5))];
     for (var section in sections) {
       ret.add(section.getSection());
     }
