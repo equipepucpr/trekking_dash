@@ -117,7 +117,7 @@ final List<Map<String, dynamic>> chartsConfig = [
     "charts": [
       {
         "chart": {
-          "name": "Trekking Map",
+          "name": "",
           "type": ChartType.scatterChart,
           "size": [800, 500],
           "getData": (Map data) {

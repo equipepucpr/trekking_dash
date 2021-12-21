@@ -31,7 +31,7 @@ class Chart {
     if (chartConfig["chart"]!["type"] == ChartType.lineChart && chartConfig["data"]!["xType"] == DataType.string) {
       throw Exception("X data of type String isn't compatible with chart type LineChart");
     }
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(milliseconds: 100), (timer) {
       getData();
     });
   }

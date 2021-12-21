@@ -48,9 +48,7 @@ class _HomePageState extends State<HomePage> {
 
     eventBus.on<ChartUpdated>().listen((event) {
       if (mounted) {
-        Timer.periodic(const Duration(seconds: 1), (timer) {
-          setState(() {});
-        });
+        setState(() {});
       }
     });
   }
